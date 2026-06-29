@@ -23,6 +23,15 @@ def list_doctors(db: Session = Depends(get_db), _: User = Depends(get_current_us
     return db.query(User).filter(User.role == Role.DOCTOR).all()
 
 
+@router.get("/patients", response_model=list[UserOut])
+def list_patients(
+    db: Session = Depends(get_db),
+    _: User = Depends(require_role(Role.DOCTOR, Role.RECEPTIONIST, Role.ADMIN)),
+):
+    """Staff-only patient directory — used by doctors when writing prescriptions."""
+    return db.query(User).filter(User.role == Role.PATIENT).all()
+
+
 @router.get("", response_model=list[UserOut])
 def list_users(
     db: Session = Depends(get_db),

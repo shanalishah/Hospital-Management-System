@@ -67,5 +67,12 @@ def test_appointment_conflict_detection(client, auth):
     assert second.status_code == 409
 
 
+def test_patients_directory_is_staff_only(client, auth):
+    # A doctor (staff) may list patients...
+    assert client.get("/users/patients", headers=auth("sara", "doctor123")).status_code == 200
+    # ...but a patient may not.
+    assert client.get("/users/patients", headers=auth("john", "patient123")).status_code == 403
+
+
 def test_unauthenticated_is_rejected(client):
     assert client.get("/users/me").status_code == 401

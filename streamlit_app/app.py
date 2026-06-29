@@ -1,17 +1,20 @@
 """
-Hospital Management System — Streamlit edition.
+Hospital Management System — Streamlit frontend (full-stack).
 
-A web rebuild of a JavaFX + MySQL desktop project. Four roles (Admin,
-Receptionist, Doctor, Patient) each get a tailored dashboard. Backed by SQLite
-so it deploys for free with a single shareable link.
+This frontend holds NO database logic. It authenticates against the FastAPI
+backend and performs every read/write over HTTP via the APIClient. Role-based
+access control is enforced server-side; the UI simply adapts to the user's role.
 
-Run locally:   streamlit run streamlit_app/app.py
+Run the backend first (cd backend && uvicorn app.main:app --reload), then:
+    streamlit run streamlit_app/app.py
 """
+
+from datetime import datetime
 
 import pandas as pd
 import streamlit as st
 
-import db
+from api import APIClient, APIError
 
 st.set_page_config(
     page_title="Hospital Management System",
@@ -20,7 +23,8 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-db.init_db()
+ROLES = ["Patient", "Admin", "Receptionist", "Doctor"]
+STATUSES = ["Requested", "Confirmed", "Cancelled", "Completed"]
 
 # ---------------------------------------------------------------------------
 # Styling
@@ -30,37 +34,28 @@ CSS = """
     .stApp { background: #f5f8fb; }
     section[data-testid="stSidebar"] { background: #0f2a43; }
     section[data-testid="stSidebar"] * { color: #e8eef5 !important; }
-
     .hero {
         background: linear-gradient(120deg, #0f6e8c 0%, #14a098 100%);
         padding: 2.2rem 2.4rem; border-radius: 18px; color: #fff;
-        margin-bottom: 1.6rem;
-        box-shadow: 0 10px 30px rgba(15,110,140,0.25);
+        margin-bottom: 1.6rem; box-shadow: 0 10px 30px rgba(15,110,140,0.25);
     }
     .hero h1 { color:#fff; margin:0; font-size:2rem; font-weight:700; }
     .hero p  { color:#e3f4f2; margin:.4rem 0 0; font-size:1.02rem; }
-
     .metric-card {
         background:#fff; border-radius:14px; padding:1.1rem 1.3rem;
-        border:1px solid #e6edf4; box-shadow:0 4px 14px rgba(20,40,70,.05);
-        height:100%;
+        border:1px solid #e6edf4; box-shadow:0 4px 14px rgba(20,40,70,.05); height:100%;
     }
     .metric-card .label { color:#5b6b7d; font-size:.82rem; text-transform:uppercase; letter-spacing:.06em; }
     .metric-card .value { color:#0f2a43; font-size:2rem; font-weight:700; line-height:1.1; }
     .metric-card .icon  { font-size:1.4rem; }
-
     .login-card {
         background:#fff; border-radius:18px; padding:2rem 2.2rem;
         border:1px solid #e6edf4; box-shadow:0 12px 34px rgba(20,40,70,.08);
     }
-    .pill {
-        display:inline-block; background:#e6f6f4; color:#0f6e8c;
-        padding:.18rem .7rem; border-radius:999px; font-size:.78rem; font-weight:600;
-    }
-    .stButton > button {
-        background:#0f6e8c; color:#fff; border:none; border-radius:10px;
-        padding:.55rem 1rem; font-weight:600;
-    }
+    .pill { display:inline-block; background:#e6f6f4; color:#0f6e8c;
+            padding:.18rem .7rem; border-radius:999px; font-size:.78rem; font-weight:600; }
+    .stButton > button { background:#0f6e8c; color:#fff; border:none; border-radius:10px;
+                         padding:.55rem 1rem; font-weight:600; }
     .stButton > button:hover { background:#14a098; color:#fff; }
     #MainMenu, footer { visibility:hidden; }
 </style>
@@ -69,48 +64,58 @@ st.markdown(CSS, unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------------------------
-# Small UI helpers
+# Helpers
 # ---------------------------------------------------------------------------
+def client() -> APIClient:
+    return APIClient(token=st.session_state.auth["token"])
+
+
 def hero(title, subtitle):
-    st.markdown(
-        f'<div class="hero"><h1>{title}</h1><p>{subtitle}</p></div>',
-        unsafe_allow_html=True,
-    )
+    st.markdown(f'<div class="hero"><h1>{title}</h1><p>{subtitle}</p></div>', unsafe_allow_html=True)
 
 
 def metric_card(col, label, value, icon):
     col.markdown(
-        f"""<div class="metric-card">
-                <div class="icon">{icon}</div>
-                <div class="value">{value}</div>
-                <div class="label">{label}</div>
-            </div>""",
+        f'<div class="metric-card"><div class="icon">{icon}</div>'
+        f'<div class="value">{value}</div><div class="label">{label}</div></div>',
         unsafe_allow_html=True,
     )
 
 
-def df(rows, rename=None):
-    frame = pd.DataFrame(rows)
-    if rename and not frame.empty:
-        frame = frame.rename(columns=rename)
-    return frame
+def fmt_dt(iso):
+    try:
+        return datetime.fromisoformat(iso).strftime("%Y-%m-%d %H:%M")
+    except (TypeError, ValueError):
+        return iso
 
 
-def show_table(rows, rename=None):
-    st.dataframe(df(rows, rename), width="stretch", hide_index=True)
+def name_map(users):
+    return {u["id"]: u["name"] for u in users}
+
+
+def handle(api_call):
+    """Run an API call, surfacing errors as Streamlit messages. Returns (ok, result)."""
+    try:
+        return True, api_call()
+    except APIError as e:
+        if e.status_code == 401:
+            st.session_state.pop("auth", None)
+            st.warning("Session expired — please sign in again.")
+            st.rerun()
+        st.error(e.detail)
+        return False, None
 
 
 # ---------------------------------------------------------------------------
-# Authentication screen
+# Login
 # ---------------------------------------------------------------------------
 def login_screen():
     st.markdown(
         '<div class="hero"><h1>🏥 Hospital Management System</h1>'
-        "<p>Role-based hospital operations platform — appointments, prescriptions, "
-        "staff and patient management. Web rebuild of a JavaFX + MySQL project.</p></div>",
+        "<p>Full-stack hospital platform — a Streamlit frontend over a FastAPI backend "
+        "with JWT auth and role-based access control.</p></div>",
         unsafe_allow_html=True,
     )
-
     left, right = st.columns([1.1, 1])
 
     with left:
@@ -118,260 +123,236 @@ def login_screen():
         tab_login, tab_register = st.tabs(["🔐  Sign in", "📝  Register"])
 
         with tab_login:
-            name = st.text_input("Full name", key="login_name", placeholder="e.g. admin")
+            username = st.text_input("Username", key="login_user", placeholder="e.g. admin")
             password = st.text_input("Password", type="password", key="login_pw")
-            role = st.selectbox("Role", db.ROLES, key="login_role")
             if st.button("Sign in", width="stretch"):
-                user = db.authenticate(name.strip(), password, role)
-                if user:
-                    st.session_state.user = user
+                c = APIClient()
+                try:
+                    data = c.login(username.strip(), password)
+                    st.session_state.auth = {
+                        "token": c.token, "name": data["name"], "role": data["role"],
+                        "username": username.strip(),
+                    }
                     st.rerun()
-                else:
-                    st.error("Invalid credentials for the selected role.")
+                except APIError as e:
+                    st.error(e.detail if e.status_code else
+                             "Cannot reach the backend API. Start it with: "
+                             "cd backend && uvicorn app.main:app --reload")
 
         with tab_register:
             r_name = st.text_input("Full name", key="reg_name")
             r_user = st.text_input("Username", key="reg_user")
             r_email = st.text_input("Email", key="reg_email")
             r_pw = st.text_input("Password", type="password", key="reg_pw")
-            r_role = st.selectbox("Register as", db.ROLES, key="reg_role")
+            r_role = st.selectbox("Register as", ROLES, key="reg_role")
             if st.button("Create account", width="stretch"):
-                if not (r_name and r_pw):
-                    st.warning("Name and password are required.")
-                elif db.name_exists(r_name.strip()):
-                    st.warning("That name is already registered.")
+                if not (r_name and r_user and r_pw):
+                    st.warning("Name, username and password are required.")
                 else:
-                    db.register_user(r_name.strip(), r_user.strip(), r_email.strip(), r_pw, r_role)
-                    st.success("Account created — switch to the Sign in tab to log in.")
+                    try:
+                        APIClient().register(r_name.strip(), r_user.strip(), r_email.strip(), r_pw, r_role)
+                        st.success("Account created — switch to Sign in.")
+                    except APIError as e:
+                        st.error(e.detail)
         st.markdown("</div>", unsafe_allow_html=True)
 
     with right:
         st.markdown("#### 👋 Try the live demo")
-        st.caption("Use any account below to explore that role. Passwords are hashed (SHA-256).")
-        st.table(
-            pd.DataFrame(
-                [
-                    ["Admin", "admin", "admin123"],
-                    ["Receptionist", "Olivia Reed", "reception123"],
-                    ["Doctor", "Dr. Sara Ahmed", "doctor123"],
-                    ["Patient", "John Carter", "patient123"],
-                ],
-                columns=["Role", "Name", "Password"],
-            )
-        )
-        st.info("Tip: pick the matching **Role** in the dropdown before signing in.")
+        st.caption("Sign in with any account. Auth is via JWT; passwords are bcrypt-hashed server-side.")
+        st.table(pd.DataFrame(
+            [["Admin", "admin", "admin123"], ["Receptionist", "olivia", "reception123"],
+             ["Doctor", "sara", "doctor123"], ["Patient", "john", "patient123"]],
+            columns=["Role", "Username", "Password"],
+        ))
+        st.info("This UI talks to the FastAPI backend — see `/docs` on the API for the Swagger spec.")
 
 
 # ---------------------------------------------------------------------------
-# Role dashboards
+# Dashboards
 # ---------------------------------------------------------------------------
 def admin_dashboard():
     hero("Admin Console", "Hospital-wide overview and staff management.")
+    c = client()
+    ok, users = handle(c.users)
+    if not ok:
+        return
+    _, appts = handle(c.appointments)
+    _, pres = handle(c.prescriptions)
+    appts, pres = appts or [], pres or []
 
+    by_role = {r: sum(1 for u in users if u["role"] == r) for r in ROLES}
     c1, c2, c3, c4, c5 = st.columns(5)
-    metric_card(c1, "Admins", db.count("reg", "userType='Admin'"), "🛡️")
-    metric_card(c2, "Receptionists", db.count("reg", "userType='Receptionist'"), "💁")
-    metric_card(c3, "Doctors", db.count("reg", "userType='Doctor'"), "🩺")
-    metric_card(c4, "Appointments", db.count("appointment"), "📅")
-    metric_card(c5, "Patients", db.count("patient"), "🧑‍⚕️")
+    metric_card(c1, "Admins", by_role["Admin"], "🛡️")
+    metric_card(c2, "Receptionists", by_role["Receptionist"], "💁")
+    metric_card(c3, "Doctors", by_role["Doctor"], "🩺")
+    metric_card(c4, "Patients", by_role["Patient"], "🧑‍⚕️")
+    metric_card(c5, "Appointments", len(appts), "📅")
 
     st.markdown("### 👥 Manage users")
-    users = db.query("SELECT user_id, name, userName, email, userType FROM reg ORDER BY user_id")
     st.dataframe(
-        df(users, {"user_id": "ID", "name": "Name", "userName": "Username",
-                   "email": "Email", "userType": "Role"}),
+        pd.DataFrame(users)[["id", "name", "username", "email", "role"]]
+          .rename(columns={"id": "ID", "name": "Name", "username": "Username",
+                           "email": "Email", "role": "Role"}),
         width="stretch", hide_index=True,
     )
 
     col_del, col_chart = st.columns([1, 1.4])
     with col_del:
         st.markdown("#### Remove a user")
-        options = {f"#{u['user_id']} — {u['name']} ({u['userType']})": u["user_id"] for u in users}
-        if options:
-            target = st.selectbox("Select user", list(options.keys()))
-            if st.button("Delete user"):
-                db.execute("DELETE FROM reg WHERE user_id=?", (options[target],))
+        opts = {f"#{u['id']} — {u['name']} ({u['role']})": u["id"] for u in users}
+        target = st.selectbox("Select user", list(opts.keys()))
+        if st.button("Delete user"):
+            ok, _ = handle(lambda: c.delete_user(opts[target]))
+            if ok:
                 st.success("User deleted.")
                 st.rerun()
     with col_chart:
         st.markdown("#### Staff distribution")
-        counts = db.query("SELECT userType AS role, COUNT(*) AS n FROM reg GROUP BY userType")
-        chart = df(counts).set_index("role") if counts else pd.DataFrame()
-        if not chart.empty:
-            st.bar_chart(chart)
+        chart = pd.DataFrame({"role": list(by_role), "count": list(by_role.values())}).set_index("role")
+        st.bar_chart(chart)
 
 
 def receptionist_dashboard():
-    hero("Reception Desk", "Schedule patient meetings and review appointment requests.")
+    hero("Reception Desk", "Manage appointment requests across all doctors.")
+    c = client()
+    ok, appts = handle(c.appointments)
+    if not ok:
+        return
+    _, doctors = handle(c.doctors)
+    _, patients = handle(c.patients)
+    dmap, pmap = name_map(doctors or []), name_map(patients or [])
 
+    pending = sum(1 for a in appts if a["status"] == "Requested")
     c1, c2, c3 = st.columns(3)
-    metric_card(c1, "Scheduled meetings", db.count("patient"), "📋")
-    metric_card(c2, "Appointment requests", db.count("appointment"), "📨")
-    metric_card(c3, "Doctors on staff", db.count("reg", "userType='Doctor'"), "🩺")
+    metric_card(c1, "Total appointments", len(appts), "📅")
+    metric_card(c2, "Pending requests", pending, "📨")
+    metric_card(c3, "Doctors on staff", len(doctors or []), "🩺")
 
-    tab_sched, tab_req = st.tabs(["🗓️ Scheduled meetings", "📨 Appointment requests"])
+    st.markdown("### 🗓️ Appointments")
+    if appts:
+        rows = [{"ID": a["id"], "Patient": pmap.get(a["patient_id"], a["patient_id"]),
+                 "Doctor": dmap.get(a["doctor_id"], a["doctor_id"]),
+                 "When": fmt_dt(a["scheduled_at"]), "Reason": a["reason"],
+                 "Status": a["status"]} for a in appts]
+        st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
 
-    with tab_sched:
-        st.markdown("#### Add / update a meeting")
-        with st.form("add_meeting", clear_on_submit=True):
-            a, b, c = st.columns(3)
-            name = a.text_input("Patient name")
-            phone = b.text_input("Phone")
-            doctor = c.selectbox("Doctor", db.DOCTORS)
-            d, e = st.columns(2)
-            mdate = d.date_input("Meeting date")
-            mtime = e.time_input("Meeting time")
-            if st.form_submit_button("Schedule meeting"):
-                if not name:
-                    st.warning("Patient name is required.")
-                else:
-                    db.execute(
-                        "INSERT INTO patient (name, phone, doctor, mettingDate, mettingTime) VALUES (?,?,?,?,?)",
-                        (name, phone, doctor, str(mdate), mtime.strftime("%H:%M")),
-                    )
-                    st.success("Meeting scheduled.")
-                    st.rerun()
-
-        rows = db.query("SELECT * FROM patient ORDER BY user_id")
-        st.dataframe(
-            df(rows, {"user_id": "ID", "name": "Patient", "phone": "Phone",
-                      "doctor": "Doctor", "mettingDate": "Date", "mettingTime": "Time"}),
-            width="stretch", hide_index=True,
-        )
-        if rows:
-            opts = {f"#{r['user_id']} — {r['name']}": r["user_id"] for r in rows}
-            col1, col2 = st.columns([2, 1])
-            target = col1.selectbox("Select meeting to delete", list(opts.keys()))
-            if col2.button("Delete meeting"):
-                db.execute("DELETE FROM patient WHERE user_id=?", (opts[target],))
-                st.success("Meeting deleted.")
+        st.markdown("#### Update appointment status")
+        col1, col2, col3 = st.columns([2, 1, 1])
+        opts = {f"#{a['id']} — {pmap.get(a['patient_id'])} → {dmap.get(a['doctor_id'])}": a["id"] for a in appts}
+        target = col1.selectbox("Appointment", list(opts.keys()))
+        new_status = col2.selectbox("New status", STATUSES)
+        if col3.button("Apply", width="stretch"):
+            ok, _ = handle(lambda: c.set_appointment_status(opts[target], new_status))
+            if ok:
+                st.success("Status updated.")
                 st.rerun()
-
-    with tab_req:
-        reqs = db.query("SELECT * FROM appointment ORDER BY user_id")
-        st.dataframe(
-            df(reqs, {"user_id": "ID", "name": "Patient", "Pphone": "Phone",
-                      "Pdoctor": "Doctor", "mettingDate": "Requested date"}),
-            width="stretch", hide_index=True,
-        )
+    else:
+        st.info("No appointments yet.")
 
 
 def doctor_dashboard():
-    user = st.session_state.user
-    hero(f"Welcome, {user['name']}", "Review appointments and issue prescriptions.")
+    auth = st.session_state.auth
+    hero(f"Welcome, {auth['name']}", "Your appointments and prescriptions.")
+    c = client()
+    _, appts = handle(c.appointments)
+    _, pres = handle(c.prescriptions)
+    ok, patients = handle(c.patients)
+    appts, pres, patients = appts or [], pres or [], patients or []
+    pmap = name_map(patients)
 
     c1, c2, c3 = st.columns(3)
-    metric_card(c1, "My appointments",
-                db.count("appointment", "Pdoctor=?", (user["name"],)), "📅")
-    metric_card(c2, "Prescriptions issued", db.count("prescription"), "💊")
-    metric_card(c3, "Patients in system", db.count("patient"), "🧑‍⚕️")
+    metric_card(c1, "My appointments", len(appts), "📅")
+    metric_card(c2, "Prescriptions issued", len(pres), "💊")
+    metric_card(c3, "Patients in system", len(patients), "🧑‍⚕️")
 
-    tab_appt, tab_new, tab_pre = st.tabs(
-        ["📅 My appointments", "✍️ New prescription", "💊 All prescriptions"]
-    )
+    tab_appt, tab_new, tab_pre = st.tabs(["📅 My appointments", "✍️ New prescription", "💊 My prescriptions"])
 
     with tab_appt:
-        appts = db.query("SELECT * FROM appointment WHERE Pdoctor=? ORDER BY mettingDate", (user["name"],))
         if appts:
-            st.dataframe(
-                df(appts, {"user_id": "ID", "name": "Patient", "Pphone": "Phone",
-                           "Pdoctor": "Doctor", "mettingDate": "Date"}),
-                width="stretch", hide_index=True,
-            )
+            rows = [{"ID": a["id"], "Patient": pmap.get(a["patient_id"], a["patient_id"]),
+                     "When": fmt_dt(a["scheduled_at"]), "Reason": a["reason"],
+                     "Status": a["status"]} for a in appts]
+            st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
         else:
-            st.info("No appointments are currently booked with you.")
+            st.info("No appointments booked with you yet.")
 
     with tab_new:
-        with st.form("new_pre", clear_on_submit=True):
-            a, b = st.columns(2)
-            pname = a.text_input("Patient name")
-            bill = b.text_input("Bill", placeholder="$50")
-            disease = st.text_input("Diagnosis / disease")
-            symptoms = st.text_area("Symptoms")
-            drug = st.text_area("Prescribed drugs & dosage")
-            if st.form_submit_button("Save prescription"):
-                if not pname:
-                    st.warning("Patient name is required.")
-                else:
-                    db.execute(
-                        "INSERT INTO prescription (bill, name, disease, syptoms, drug) VALUES (?,?,?,?,?)",
-                        (bill, pname, disease, symptoms, drug),
-                    )
-                    st.success("Prescription saved.")
-                    st.rerun()
+        if not patients:
+            st.info("No patients registered yet.")
+        else:
+            popts = {f"{p['name']} (#{p['id']})": p["id"] for p in patients}
+            with st.form("new_pre", clear_on_submit=True):
+                patient = st.selectbox("Patient", list(popts.keys()))
+                a, b = st.columns(2)
+                diagnosis = a.text_input("Diagnosis")
+                bill = b.number_input("Bill amount", min_value=0.0, step=10.0)
+                symptoms = st.text_area("Symptoms")
+                medication = st.text_area("Prescribed medication & dosage")
+                if st.form_submit_button("Save prescription"):
+                    if not diagnosis:
+                        st.warning("Diagnosis is required.")
+                    else:
+                        ok, _ = handle(lambda: c.add_prescription(
+                            popts[patient], diagnosis, symptoms, medication, bill))
+                        if ok:
+                            st.success("Prescription saved.")
+                            st.rerun()
 
     with tab_pre:
-        pres = db.query("SELECT * FROM prescription ORDER BY ID DESC")
-        st.dataframe(
-            df(pres, {"ID": "ID", "bill": "Bill", "name": "Patient",
-                      "disease": "Diagnosis", "syptoms": "Symptoms", "drug": "Prescription"}),
-            width="stretch", hide_index=True,
-        )
+        if pres:
+            rows = [{"ID": p["id"], "Patient": pmap.get(p["patient_id"], p["patient_id"]),
+                     "Diagnosis": p["diagnosis"], "Medication": p["medication"],
+                     "Bill": p["bill_amount"]} for p in pres]
+            st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
+        else:
+            st.info("You haven't issued any prescriptions yet.")
 
 
 def patient_dashboard():
-    user = st.session_state.user
-    hero(f"Hello, {user['name']}", "Book appointments, meet our doctors, and view your prescriptions.")
+    auth = st.session_state.auth
+    hero(f"Hello, {auth['name']}", "Book appointments and view your prescriptions.")
+    c = client()
+    ok, doctors = handle(c.doctors)
+    if not ok:
+        return
+    dmap = name_map(doctors)
 
-    tab_book, tab_docs, tab_pre = st.tabs(
-        ["📅 Book appointment", "🩺 Our doctors", "💊 My prescriptions"]
-    )
+    tab_book, tab_appt, tab_pre = st.tabs(["📅 Book appointment", "🗓️ My appointments", "💊 My prescriptions"])
 
     with tab_book:
-        st.markdown("#### Request an appointment")
+        dopts = {d["name"]: d["id"] for d in doctors}
         with st.form("book", clear_on_submit=True):
+            doctor = st.selectbox("Doctor", list(dopts.keys()))
             a, b = st.columns(2)
-            name = a.text_input("Your name", value=user["name"])
-            phone = b.text_input("Phone")
-            c, d = st.columns(2)
-            doctor = c.selectbox("Doctor", db.DOCTORS)
-            mdate = d.date_input("Preferred date")
+            d = a.date_input("Preferred date")
+            t = b.time_input("Preferred time")
+            reason = st.text_input("Reason for visit")
             if st.form_submit_button("Request appointment"):
-                if not name:
-                    st.warning("Name is required.")
-                else:
-                    db.execute(
-                        "INSERT INTO appointment (name, Pphone, Pdoctor, mettingDate) VALUES (?,?,?,?)",
-                        (name, phone, doctor, str(mdate)),
-                    )
+                scheduled = datetime.combine(d, t).isoformat()
+                ok, _ = handle(lambda: c.book_appointment(dopts[doctor], scheduled, reason))
+                if ok:
                     st.success("Appointment requested! Reception will confirm shortly.")
+                    st.rerun()
 
-        mine = db.query("SELECT * FROM appointment WHERE name=? ORDER BY mettingDate", (user["name"],))
-        if mine:
-            st.markdown("##### Your requests")
-            st.dataframe(
-                df(mine, {"user_id": "ID", "name": "Patient", "Pphone": "Phone",
-                          "Pdoctor": "Doctor", "mettingDate": "Date"}),
-                width="stretch", hide_index=True,
-            )
-
-    with tab_docs:
-        st.markdown("#### Meet our specialists")
-        cols = st.columns(2)
-        blurbs = [
-            "General Medicine · 12 yrs experience",
-            "Cardiology · 9 yrs experience",
-            "Pediatrics · 7 yrs experience",
-            "Orthopedics · 15 yrs experience",
-        ]
-        for i, doc in enumerate(db.DOCTORS):
-            with cols[i % 2]:
-                st.markdown(
-                    f"""<div class="metric-card" style="margin-bottom:1rem;">
-                            <div class="icon">🩺</div>
-                            <div class="value" style="font-size:1.2rem;">{doc}</div>
-                            <div class="label">{blurbs[i]}</div>
-                        </div>""",
-                    unsafe_allow_html=True,
-                )
+    with tab_appt:
+        _, appts = handle(c.appointments)
+        appts = appts or []
+        if appts:
+            rows = [{"ID": a["id"], "Doctor": dmap.get(a["doctor_id"], a["doctor_id"]),
+                     "When": fmt_dt(a["scheduled_at"]), "Reason": a["reason"],
+                     "Status": a["status"]} for a in appts]
+            st.dataframe(pd.DataFrame(rows), width="stretch", hide_index=True)
+        else:
+            st.info("You have no appointments yet.")
 
     with tab_pre:
-        mine = db.query("SELECT * FROM prescription WHERE name=? ORDER BY ID DESC", (user["name"],))
-        if mine:
-            for p in mine:
-                with st.expander(f"💊 {p['disease']} — bill {p['bill']}"):
-                    st.write(f"**Symptoms:** {p['syptoms']}")
-                    st.write(f"**Prescription:** {p['drug']}")
+        _, pres = handle(c.prescriptions)
+        pres = pres or []
+        if pres:
+            for p in pres:
+                with st.expander(f"💊 {p['diagnosis']} — bill ${p['bill_amount']:.0f}"):
+                    st.write(f"**Symptoms:** {p['symptoms'] or '—'}")
+                    st.write(f"**Medication:** {p['medication'] or '—'}")
         else:
             st.info("You have no prescriptions on file yet.")
 
@@ -380,23 +361,23 @@ def patient_dashboard():
 # Router
 # ---------------------------------------------------------------------------
 def main():
-    if "user" not in st.session_state:
+    if "auth" not in st.session_state:
         login_screen()
         return
 
-    user = st.session_state.user
+    auth = st.session_state.auth
     with st.sidebar:
         st.markdown("## 🏥 HMS")
-        st.markdown(f"**{user['name']}**")
-        st.markdown(f'<span class="pill">{user["userType"]}</span>', unsafe_allow_html=True)
+        st.markdown(f"**{auth['name']}**")
+        st.markdown(f'<span class="pill">{auth["role"]}</span>', unsafe_allow_html=True)
         st.markdown("---")
         if st.button("🚪 Sign out", width="stretch"):
-            del st.session_state.user
+            st.session_state.pop("auth", None)
             st.rerun()
         st.markdown("---")
-        st.caption("Web rebuild of a JavaFX + MySQL desktop project.\nBuilt with Streamlit + SQLite.")
+        st.caption("Full-stack: Streamlit frontend → FastAPI backend (JWT + RBAC).")
 
-    role = user["userType"]
+    role = auth["role"]
     if role == "Admin":
         admin_dashboard()
     elif role == "Receptionist":

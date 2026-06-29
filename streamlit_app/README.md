@@ -1,57 +1,52 @@
-# 🏥 Hospital Management System — Web Edition
+# 🏥 Hospital Management System — Frontend (Streamlit)
 
-A role-based hospital operations platform with four user types — **Admin,
-Receptionist, Doctor, and Patient** — each with a tailored dashboard for
-appointments, prescriptions, and staff/patient management.
+A role-aware web UI for the Hospital Management System. It holds **no database
+logic** — it authenticates against the [FastAPI backend](../backend) and performs
+every read/write over HTTP, adapting the interface to the signed-in user's role
+(Admin, Receptionist, Doctor, Patient).
 
-This is a web rebuild of a JavaFX + MySQL desktop project, re-engineered with
-**Streamlit + SQLite** so it runs anywhere and deploys for free with a single
-shareable link.
+```
+ Streamlit UI  ──HTTP/JWT──▶  FastAPI backend  ──▶  PostgreSQL / SQLite
+ (this folder)                (../backend)
+```
 
-## ✨ Live demo
+## ✨ What it shows
 
-> Add your deployed link here, e.g. `https://your-app.streamlit.app`
-
-Sign in with any demo account (pick the matching **Role** in the dropdown):
-
-| Role         | Name           | Password       |
-|--------------|----------------|----------------|
-| Admin        | `admin`        | `admin123`     |
-| Receptionist | `Olivia Reed`  | `reception123` |
-| Doctor       | `Dr. Sara Ahmed` | `doctor123`  |
-| Patient      | `John Carter`  | `patient123`   |
-
-## 🧩 Features
-
-- **Authentication & registration** with role selection; passwords hashed with SHA-256.
-- **Admin** — hospital-wide metrics, staff distribution chart, user management (view/delete).
-- **Receptionist** — schedule & delete patient meetings, review patient appointment requests.
-- **Doctor** — view personal appointments, write prescriptions, browse all prescriptions.
-- **Patient** — book appointments, browse doctors, view personal prescriptions.
-
-## 🛠️ Tech stack
-
-Python · Streamlit · SQLite · pandas
+- **JWT login** against the API; the token is kept in session and sent on every request.
+- **Role-based dashboards** — the same app renders a different experience per role.
+- **Live data** — metrics, tables, appointment booking, status updates, and prescriptions all flow through the API.
+- Graceful handling of auth expiry and unreachable-backend states.
 
 ## 🚀 Run locally
 
+Start the backend first (see [`../backend/README.md`](../backend/README.md)), then:
+
 ```bash
+cd streamlit_app
 pip install -r requirements.txt
 streamlit run app.py
 ```
 
-The SQLite database (`hospital.db`) is created and seeded with demo data on first run.
+By default the UI talks to `http://localhost:8000`. Override with the
+`API_BASE_URL` environment variable, or—on Streamlit Community Cloud—set an
+`API_BASE_URL` entry in the app's **Secrets**:
 
-## ☁️ Deploy (free public link)
+```toml
+API_BASE_URL = "https://your-backend-host.example.com"
+```
 
-1. Push this repo to GitHub.
-2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
-3. **New app** → pick the repo → set **main file path** to `streamlit_app/app.py`.
-4. Deploy. You'll get a public `*.streamlit.app` URL to share on your resume.
+## 👤 Demo accounts
 
-## 🔁 Improvements over the original desktop app
+| Role | Username | Password |
+|------|----------|----------|
+| Admin | `admin` | `admin123` |
+| Receptionist | `olivia` | `reception123` |
+| Doctor | `sara` | `doctor123` |
+| Patient | `john` | `patient123` |
 
-- Plain-text passwords → **SHA-256 hashing**.
-- Local-only MySQL desktop app → **deployable web app** with a public link.
-- SQL built via string concatenation → **parameterized queries** (SQL-injection safe).
-- Per-role JavaFX windows → unified, responsive web dashboards.
+## ☁️ Deployment
+
+This is the **frontend half** of a full-stack app, so deployment is two pieces:
+
+1. **Backend** → a host that runs a web service + database (Render / Railway / Fly.io) — see the backend README.
+2. **Frontend** → Streamlit Community Cloud, with `API_BASE_URL` in Secrets pointing at the deployed backend, and main file path `streamlit_app/app.py`.

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #2A2E37;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jdbc.SignupController">
+   <children>
+      <VBox alignment="TOP_RIGHT" fillWidth="false" layoutX="260.0" prefHeight="321.0" prefWidth="240.0" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="260.0" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="5.0">
+         <children>
+            <Label fx:id="lblReg" lineSpacing="5.0" prefHeight="35.0" prefWidth="201.0" text="Sign Up" textFill="#e99e71">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <JFXTextField fx:id="txtregname" focusColor="#e99e71eb" labelFloat="true" prefHeight="30.0" prefWidth="200.0" promptText="Name" styleClass="txtfield" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/jdbc/src/css/style.css" unFocusColor="#ddcaca" />
+            <JFXTextField fx:id="txtregusername" focusColor="#e99e71" prefHeight="30.0" prefWidth="200.0" promptText="Username" styleClass="txtfield" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/jdbc/src/css/style.css" unFocusColor="#ddcaca" />
+            <JFXTextField fx:id="txtregemail" focusColor="#e99e71" prefHeight="30.0" prefWidth="200.0" promptText="Email" styleClass="txtfield" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/jdbc/src/css/style.css" unFocusColor="#ddcaca" />
+            <JFXPasswordField fx:id="txtregpass" focusColor="#e99e71" prefHeight="30.0" prefWidth="200.0" promptText="Password" styleClass="txtfield" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/jdbc/src/css/style.css" unFocusColor="#ddcaca" />
+            <JFXComboBox fx:id="combobox" editable="true" focusColor="#e99e71" prefHeight="30.0" prefWidth="200.0" promptText="Login As:" styleClass="txtfield" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/jdbc/src/css/style.css" unFocusColor="#ddcaca" />
+            <HBox prefHeight="45.0" prefWidth="200.0">
+               <children>
+                  <JFXButton fx:id="btnCancel" onAction="#checkCancel" prefHeight="11.0" prefWidth="70.0" styleClass="btnlogin" stylesheets="@../css/style.css" text="Cancel" textFill="#aea1a1">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton fx:id="btnSave" onAction="#checkSave" prefHeight="18.0" prefWidth="50.0" styleClass="btnlogin" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="Save" textFill="#aea1a1">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="50.0" />
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="30.0" right="20.0" top="30.0" />
+         </padding>
+      </VBox>
+      <VBox prefHeight="403.0" prefWidth="235.0" style="-fx-background-color: #fff;">
+         <children>
+            <HBox prefHeight="70.0" prefWidth="235.0">
+               <children>
+                  <Label text="Join us:" textFill="#e99e71">
+                     <HBox.margin>
+                        <Insets left="25.0" top="40.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" fillHeight="false" prefHeight="37.0" prefWidth="215.0" spacing="15.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="29.0" style="-fx-background-color: #e99e71;">
+                     <graphic>
+                        <FontAwesomeIcon fill="WHITE" glyphName="WHATSAPP" size="2em" wrappingWidth="25.999969482421875" />
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" style="-fx-background-color: #e99e71;">
+                     <graphic>
+                        <FontAwesomeIcon fill="#efefef" glyphName="TWITTER" size="2em" wrappingWidth="25.999969482421875" />
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" style="-fx-background-color: #e99e71;">
+                     <graphic>
+                        <FontAwesomeIcon fill="WHITE" glyphName="FACEBOOK" size="2em" wrappingWidth="25.999969482421875" />
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" style="-fx-background-color: #e99e71;">
+                     <graphic>
+                        <FontAwesomeIcon fill="#fcfdfd" glyphName="LINKEDIN" size="2em" wrappingWidth="25.999969482421875" />
+                     </graphic>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets left="20.0" right="20.0" />
+               </VBox.margin></HBox>
+            <ImageView fitHeight="180.0" fitWidth="200.0" focusTraversable="true" opacity="0.85" pickOnBounds="true">
+               <VBox.margin>
+                  <Insets left="30.0" top="60.0" />
+               </VBox.margin>
+               <image>
+                  <Image url="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/img/signup.jpg" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

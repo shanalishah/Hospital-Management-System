@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jdbc.FXMLadminTableController">
+   <children>
+      <HBox fillHeight="false" prefHeight="46.0" prefWidth="600.0" style="-fx-background-color: #2A2E37;">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="154.0" text="MANAGE USERS" textFill="#e4e4e4">
+               <HBox.margin>
+                  <Insets left="225.0" top="8.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER_LEFT" prefHeight="26.0" prefWidth="15.0">
+               <children>
+                  <Button fx:id="backbtn" mnemonicParsing="false" onAction="#returnBtn" prefHeight="8.0" prefWidth="11.0" style="-fx-background-color: #2A2E37;" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" textAlignment="CENTER" textFill="#e9e0e0">
+                     <graphic>
+                        <FontAwesomeIcon fill="#edebeb" glyphName="CLOSE" text="" wrappingWidth="16.333343505859375" />
+                     </graphic>
+                  </Button>
+               </children>
+               <HBox.margin>
+                  <Insets left="200.0" />
+               </HBox.margin>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox layoutX="52.0" layoutY="177.0" prefHeight="190.0" prefWidth="494.0">
+         <children>
+            <TableView fx:id="adminTable" fixedCellSize="0.0" onMouseClicked="#handleMouseAction" prefHeight="216.0" prefWidth="494.0" style="-fx-background-radius: 3; -fx-border-color: #1f1f1f; -fx-border-width: 1px;">
+               <columns>
+                  <TableColumn fx:id="colltblid" prefWidth="42.333343505859375" resizable="false" sortType="DESCENDING" text="ID" />
+                  <TableColumn fx:id="coltblname" prefWidth="75.33331298828125" sortable="false" text="Name" />
+                  <TableColumn fx:id="coltblusername" minWidth="-Infinity" prefWidth="82.66668701171875" sortable="false" text="Username" />
+                  <TableColumn fx:id="coltblemail" minWidth="-1.0" prefWidth="103.66668701171875" sortable="false" text="Email" />
+                  <TableColumn fx:id="coltblpassword" minWidth="-1.0" prefWidth="89.33331298828125" sortable="false" text="Password" />
+                  <TableColumn fx:id="coltblusertype" minWidth="-1.0" prefWidth="94.0" sortable="false" text="User Type" />
+               </columns>
+            </TableView>
+         </children>
+      </HBox>
+      <HBox layoutX="153.0" layoutY="141.0" prefHeight="26.0" prefWidth="313.0" spacing="10.0">
+         <children>
+            <Button fx:id="btnSave" mnemonicParsing="false" onAction="#recepSave" prefHeight="25.0" prefWidth="68.0" style="-fx-background-color: #277E61;" text="Add" textFill="WHITE">
+               <font>
+                  <Font size="10.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="btnDelet" mnemonicParsing="false" onAction="#deletRecord" prefHeight="25.0" prefWidth="70.0" style="-fx-background-color: #F1341F;" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/jdbc/src/css/style.css" text="Delete" textFill="WHITE">
+               <font>
+                  <Font size="10.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="btnUpdate" mnemonicParsing="false" prefHeight="25.0" prefWidth="70.0" style="-fx-background-color: #E7A228;" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/jdbc/src/css/style.css" text="Update" textFill="WHITE">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnLoad" mnemonicParsing="false" onAction="#loadRecord" prefHeight="25.0" prefWidth="70.0" style="-fx-background-color: #2589E3;" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/jdbc/src/css/style.css" text="Show All" textFill="WHITE">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="53.0" layoutY="66.0" prefHeight="63.0" prefWidth="494.0" spacing="20.0" style="-fx-background-color: #2A2E37; -fx-background-radius: 2;">
+         <children>
+            <HBox alignment="CENTER" fillHeight="false" prefHeight="74.0" prefWidth="125.0">
+               <children>
+                  <TextField fx:id="search" alignment="CENTER" prefHeight="25.0" prefWidth="123.0" promptText="Search By ID" style="-fx-background-radius: 5 0 0 5;">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </TextField>
+                  <Button mnemonicParsing="false" onAction="#btnSearch" prefHeight="24.0" prefWidth="19.0" style="-fx-background-radius: 0 5 5 0; -fx-background-color: #D5D5D5;">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets top="-2.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <FontAwesomeIcon fill="#090101" glyphName="SEARCH" size="16px" wrappingWidth="16.666656494140625" />
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+            <ComboBox fx:id="combobox" editable="true" onAction="#getSelected" prefHeight="25.0" prefWidth="121.0" promptText="Category">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </ComboBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jdbc.mainController">
+   <children>
+      <HBox prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox prefHeight="400.0" prefWidth="171.0" style="-fx-background-color: #2A2E37;">
+               <children>
+                  <HBox alignment="TOP_CENTER" prefHeight="72.0" prefWidth="151.0">
+                     <children>
+                        <Circle fill="#dbdcdd" radius="22.0" stroke="BLACK" strokeType="INSIDE">
+                           <HBox.margin>
+                              <Insets top="20.0" />
+                           </HBox.margin>
+                        </Circle>
+                     </children>
+                     <cursor>
+                        <Cursor fx:constant="SE_RESIZE" />
+                     </cursor>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" prefHeight="20.0" prefWidth="151.0">
+                     <children>
+                        <Label fx:id="lblName" text="Rayhan" textFill="#d7d2d2">
+                           <font>
+                              <Font name="Berlin Sans FB" size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" layoutX="10.0" layoutY="89.0" prefHeight="24.0" prefWidth="151.0">
+                     <children>
+                        <Label fx:id="lblType" text="Receptionist" textFill="#ede2e2">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="151.0">
+                     <children>
+                        <JFXButton fx:id="btnadduser" alignment="BASELINE_LEFT" buttonType="RAISED" focusTraversable="false" onAction="#checkReg" prefHeight="49.0" prefWidth="151.0" scaleShape="false" styleClass="btnReceptionist" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="Add User" textFill="#f8e6e6" HBox.hgrow="NEVER">
+                           <graphic>
+                              <FontAwesomeIcon fill="#edebeb" glyphName="USER_PLUS" wrappingWidth="17.0" />
+                           </graphic>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </JFXButton>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="176.0" prefHeight="42.0" prefWidth="151.0">
+                     <children>
+                        <JFXButton fx:id="btnadduser11" alignment="BASELINE_LEFT" buttonType="RAISED" focusTraversable="false" onAction="#showMetReq" prefHeight="50.0" prefWidth="151.0" scaleShape="false" styleClass="btnReceptionist" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="Show Meeting Requests" textFill="#f8e6e6" wrapText="true" HBox.hgrow="NEVER">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <graphic>
+                              <FontAwesomeIcon fill="#edebeb" glyphName="BELL" wrappingWidth="17.0" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="146.0" prefHeight="40.0" prefWidth="151.0">
+                     <children>
+                        <JFXButton fx:id="btnadduser1" alignment="BASELINE_LEFT" buttonType="RAISED" focusTraversable="false" onAction="#addUser" prefHeight="45.0" prefWidth="151.0" scaleShape="false" styleClass="btnReceptionist" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="Set Appointment" textFill="#f8e6e6" wrapText="true" HBox.hgrow="NEVER">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <graphic>
+                              <FontAwesomeIcon fill="#efeded" glyphName="CALENDAR" text="" wrappingWidth="19.33331298828125" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="btnSignout" alignment="CENTER_LEFT" prefHeight="41.0" prefWidth="151.0">
+                     <children>
+                        <Button fx:id="signoutbtn" mnemonicParsing="false" onAction="#signOut" prefHeight="69.0" prefWidth="151.0" styleClass="btnReceptionist" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="  Signout" textAlignment="CENTER" textFill="#e9e0e0">
+                           <graphic>
+                              <FontAwesomeIcon fill="#edebeb" glyphName="SIGN_OUT" size="1.5em" wrappingWidth="16.333343505859375" />
+                           </graphic>
+                           <padding>
+                              <Insets right="70.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+              </VBox>
+            <VBox prefHeight="400.0" prefWidth="449.0" spacing="30.0">
+               <children>
+                  <HBox alignment="CENTER" fillHeight="false" prefHeight="49.0" prefWidth="450.0" style="-fx-background-color: #D1D1D1;">
+                     <children>
+                        <Label prefHeight="48.0" prefWidth="228.0" text="Welcome to Healthy Wave Hospital" textFill="#1b2b38">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fillHeight="false" prefHeight="261.0" prefWidth="351.0" style="-fx-background-color: #fff;">
+                     <children>
+                        <ImageView fitHeight="260.0" fitWidth="351.0" pickOnBounds="true">
+                           <image>
+                              <Image url="@../img/user.jpg" />
+                           </image>
+                        </ImageView>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="50.0" right="50.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

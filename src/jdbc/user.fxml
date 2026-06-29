@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jdbc.UserController">
+   <children>
+      <HBox layoutX="10.0" layoutY="10.0" prefHeight="410.0" prefWidth="610.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox prefHeight="400.0" prefWidth="158.0" style="-fx-background-color: #2A2E37;">
+               <children>
+                  <HBox alignment="TOP_CENTER" prefHeight="72.0" prefWidth="151.0">
+                     <children>
+                        <FontAwesomeIcon fill="#e9d6d6" glyphName="CIRCLE" size="4em" wrappingWidth="44.666595458984375">
+                           <HBox.margin>
+                              <Insets top="30.0" />
+                           </HBox.margin>
+                        </FontAwesomeIcon>
+                     </children>
+                   
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" prefHeight="20.0" prefWidth="151.0">
+                     <children>
+                        <Label fx:id="lblName" text="Zahra" textFill="#d7d2d2">
+                           <font>
+                              <Font name="Berlin Sans FB" size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" layoutX="10.0" layoutY="89.0" prefHeight="24.0" prefWidth="143.0">
+                     <children>
+                        <Label fx:id="lblType" text="patient" textFill="#ede2e2">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="151.0">
+                     <VBox.margin>
+                        <Insets top="4.0" />
+                     </VBox.margin>
+                     <children>
+                        <Button fx:id="doctorsinfobtn" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#showdocProfile" prefHeight="51.0" prefWidth="151.0" styleClass="btnuser" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="Take an          Appointment" textFill="#edecec" wrapText="true">
+                           <graphic>
+                              <FontAwesomeIcon fill="#efeded" glyphName="CALENDAR" text="" wrappingWidth="13.333282470703125" />
+                           </graphic>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="btnSignout" alignment="CENTER" prefHeight="37.0" prefWidth="143.0">
+                     <children>
+                        <Button fx:id="cardbtn" lineSpacing="8.0" mnemonicParsing="false" onAction="#showdocPre" prefHeight="38.0" prefWidth="151.0" styleClass="btnuser" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="Prescription" textAlignment="CENTER" textFill="#e9e0e0" wrapText="true">
+                           <padding>
+                              <Insets right="60.0" />
+                           </padding>
+                           <graphic>
+                              <FontAwesomeIcon fill="#efeded" glyphName="CREDIT_CARD" text="" wrappingWidth="16.333343505859375" />
+                           </graphic>
+                        </Button>
+                     </children></HBox>
+                  <HBox fx:id="btnSignout1" alignment="CENTER_LEFT" layoutX="10.0" layoutY="185.0" prefHeight="37.0" prefWidth="143.0">
+                     <children>
+                        <Button fx:id="infobtn" mnemonicParsing="false" prefHeight="38.0" prefWidth="151.0" styleClass="btnuser" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="Medical Info" textAlignment="CENTER" textFill="#e9e0e0">
+                           <graphic>
+                              <FontAwesomeIcon fill="#e9d6d6" glyphName="INFO" text="" wrappingWidth="19.666656494140625" />
+                           </graphic>
+                           <padding>
+                              <Insets right="44.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="151.0">
+                     <children>
+                        <Button fx:id="signoutbtn" mnemonicParsing="false" onAction="#signOut" prefHeight="38.0" prefWidth="151.0" styleClass="btnuser" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="  Signout" textAlignment="CENTER" textFill="#e9e0e0">
+                           <graphic>
+                              <FontAwesomeIcon fill="#edebeb" glyphName="SIGN_OUT" size="1.5em" wrappingWidth="16.333343505859375" />
+                           </graphic>
+                           <padding>
+                              <Insets right="70.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox fillWidth="false" focusTraversable="true" prefHeight="400.0" prefWidth="449.0" spacing="30.0" style="-fx-background-color: #D1D1D1;">
+               <children>
+                  <HBox alignment="CENTER" fillHeight="false" prefHeight="49.0" prefWidth="450.0" style="-fx-background-color: #D1D1D1;">
+                     <children>
+                        <Label prefHeight="20.0" prefWidth="283.0" text="Welcome to Healthy Wave Hospital" textFill="#e96519">
+                           <HBox.margin>
+                              <Insets left="50.0" top="15.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="0.0" prefWidth="454.0">
+                     <children>
+                        <Line endX="1201.57763671875" endY="-237.333251953125" startX="758.860595703125" startY="-237.1261444091797">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                        </Line>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="-20.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox fillHeight="false" prefHeight="265.0" prefWidth="353.0" style="-fx-background-color: #fff; -fx-background-radius: 2;">
+                     <children>
+                        <VBox prefHeight="265.0" prefWidth="162.0">
+                           <children>
+                              <Label prefHeight="102.0" prefWidth="141.0" text="What do you want to know from a medical consultant ?" wrapText="true">
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="25.0" top="30.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label prefHeight="36.0" prefWidth="134.0" text="Here you can find effective medical care" wrapText="true">
+                                 <VBox.margin>
+                                    <Insets left="25.0" top="-10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Button alignment="TOP_LEFT" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="111.0" style="-fx-background-color: #E99E71;" text="       Contact us" textFill="#2f2929">
+                                 <VBox.margin>
+                                    <Insets left="25.0" top="20.0" />
+                                 </VBox.margin>
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="268.0" prefWidth="191.0">
+                           <children>
+                              <ImageView fitHeight="145.0" fitWidth="142.0" pickOnBounds="true">
+                                 <image>
+                                    <Image url="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/img/statscope.jpg" />
+                                 </image>
+                                 <VBox.margin>
+                                    <Insets left="30.0" top="50.0" />
+                                 </VBox.margin>
+                              </ImageView>
+                           </children>
+                        </VBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="50.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

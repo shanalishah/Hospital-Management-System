@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jdbc.FXMLDoctorController">
+   <children>
+      <HBox layoutX="20.0" layoutY="20.0" prefHeight="430.0" prefWidth="630.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox prefHeight="289.0" prefWidth="151.0" style="-fx-background-color: #2A2E37;">
+               <children>
+                  <HBox alignment="TOP_CENTER" prefHeight="72.0" prefWidth="151.0">
+                     <children>
+                        <FontAwesomeIcon fill="#e9d6d6" glyphName="CIRCLE" size="4em" wrappingWidth="44.666595458984375">
+                           <HBox.margin>
+                              <Insets top="30.0" />
+                           </HBox.margin>
+                        </FontAwesomeIcon>
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" prefHeight="20.0" prefWidth="151.0">
+                     <children>
+                        <Label fx:id="lblName" text="Sara" textFill="#d7d2d2">
+                           <font>
+                              <Font name="Berlin Sans FB" size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" layoutX="10.0" layoutY="89.0" prefHeight="24.0" prefWidth="143.0">
+                     <children>
+                        <Label fx:id="lblType" text="Doctor" textFill="#ede2e2">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="48.0" prefWidth="151.0">
+                     <VBox.margin>
+                        <Insets top="4.0" />
+                     </VBox.margin>
+                     <children>
+                        <Button fx:id="doctorsinfobtn" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#showListofAppointmet" prefHeight="51.0" prefWidth="151.0" styleClass="btnDoctor" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="List Of     Appointments " textFill="#edecec" wrapText="true">
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
+                           <graphic>
+                              <FontAwesomeIcon fill="#efeded" glyphName="ARCHIVE" size="14px" wrappingWidth="25.999969482421875" />
+                           </graphic>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="btnSignout" alignment="CENTER" prefHeight="50.0" prefWidth="151.0">
+                     <children>
+                        <Button fx:id="doctorsinfobtn1" alignment="BASELINE_LEFT" mnemonicParsing="false" onAction="#btnMakePrescription" prefHeight="65.0" prefWidth="151.0" styleClass="btnDoctor" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="Patients'  Prescription" textFill="#edecec" wrapText="true">
+                           <graphic>
+                              <FontAwesomeIcon fill="#efeded" glyphName="EDIT" size="1.5em" wrappingWidth="25.999969482421875" />
+                           </graphic>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="btnSignout1" alignment="CENTER_LEFT" layoutX="10.0" layoutY="185.0" prefHeight="51.0" prefWidth="151.0">
+                     <children>
+                        <Button fx:id="doctorsinfobtn11" alignment="BASELINE_LEFT" mnemonicParsing="false" prefHeight="66.0" prefWidth="151.0" styleClass="btnDoctor" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="Patients' Report" textFill="#edecec" wrapText="true">
+                           <graphic>
+                              <FontAwesomeIcon fill="#efeded" glyphName="HISTORY" size="16px" wrappingWidth="25.999969482421875" />
+                           </graphic>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="39.0" prefWidth="151.0">
+                     <children>
+                        <Button fx:id="signoutbtn" mnemonicParsing="false" onAction="#signOut" prefHeight="38.0" prefWidth="151.0" styleClass="btnDoctor" stylesheets="file:/C:/Users/DELL/Documents/NetBeansProjects/javaFx/jdbc/src/css/style.css" text="  Signout" textAlignment="CENTER" textFill="#e9e0e0">
+                           <graphic>
+                              <FontAwesomeIcon fill="#edebeb" glyphName="SIGN_OUT" size="16px" wrappingWidth="16.333343505859375" />
+                           </graphic>
+                           <padding>
+                              <Insets right="70.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox fillWidth="false" focusTraversable="true" prefHeight="400.0" prefWidth="449.0" spacing="30.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" fillHeight="false" prefHeight="57.0" prefWidth="458.0" style="-fx-border-radius: 0 0 0 0; -fx-border-color: gray;">
+                     <children>
+                        <Label text="Doctor Dashboard" textFill="#554cbc">
+                           <HBox.margin>
+                              <Insets left="30.0" right="30.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fillHeight="false" layoutX="10.0" layoutY="77.0" prefHeight="32.0" prefWidth="169.0">
+                     <children>
+                        <Label prefHeight="27.0" prefWidth="100.0" text="Updates:" textFill="#2a2e37">
+                           <HBox.margin>
+                              <Insets left="24.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="-15.0" top="-20.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" layoutX="30.0" layoutY="124.0" prefHeight="74.0" prefWidth="167.0" style="-fx-background-color: #554CBC;">
+                     <children>
+                        <Label fx:id="lbltxt3" contentDisplay="TOP" prefHeight="74.0" prefWidth="103.0" text="    Appointments" textAlignment="CENTER" textFill="#ccb9b9">
+                           <graphic>
+                              <FontAwesomeIcon fill="#ccb9b9" glyphName="CALENDAR_ALT" size="2em" wrappingWidth="56.666656494140625" />
+                           </graphic>
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lblCountApp" alignment="CENTER" contentDisplay="CENTER" prefHeight="75.0" prefWidth="62.0" text="                      " textFill="#ccb9b9">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="20.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="TOP_CENTER" layoutX="30.0" layoutY="124.0" prefHeight="74.0" prefWidth="166.0" style="-fx-background-color: #554CBC;">
+                     <children>
+                        <Label fx:id="lbltxt4" contentDisplay="TOP" prefHeight="74.0" prefWidth="92.0" text="Patients'    Prescription" textAlignment="CENTER" textFill="#ccb9b9" wrapText="true">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIcon fill="#ccb9b9" glyphName="WHEELCHAIR" size="2em" wrappingWidth="58.666656494140625" />
+                           </graphic>
+                        </Label>
+                        <Label fx:id="lblCountReq" alignment="CENTER" contentDisplay="CENTER" prefHeight="75.0" prefWidth="62.0" text="                      " textFill="#ccb9b9">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="248.0" top="-105.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="172.0">
+                     <children>
+                        <FontAwesomeIcon fill="#554cbc" glyphName="BAR_CHART_O" size="12em" wrappingWidth="174.66665649414062" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="30.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox layoutX="40.0" layoutY="227.0" prefHeight="100.0" prefWidth="172.0">
+                     <children>
+                        <FontAwesomeIcon fill="#554cbc" glyphName="AREA_CHART" size="12em" wrappingWidth="174.66665649414062" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="250.0" top="-170.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

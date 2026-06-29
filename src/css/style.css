@@ -1,0 +1,145 @@
+
+*{
+    backc :#2A2E37;
+    bor :#E99E71;
+    reg: #3B5745;
+}
+
+.btnregAdmin{
+    -fx-border-color:#098F80;
+    -fx-background-color:  backc;
+    -fx-border-radius: 20;
+}
+
+.btnregAdmin:hover{
+    -fx-border-color:#098F80;
+    -fx-background-color: #098F80;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-text-fill:white;
+} 
+
+.btnSignup{
+    -fx-border-color:#5cb9ed;
+    -fx-background-color:  backc;
+    -fx-border-radius: 20;
+}
+
+
+.btnSignup:hover{
+    -fx-border-color:#5cb9ed;
+    -fx-background-color: #5cb9ed;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-text-fill:white;
+} 
+
+.btnlogin{
+    -fx-border-color:bor;
+    -fx-background-color:  backc;
+    -fx-border-radius: 20;
+}
+
+
+.btnlogin:hover{
+    -fx-border-color:bor;
+    -fx-background-color: bor;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-text-fill:white;
+} 
+
+.txtfield {
+    -fx-prompt-text-fill: gray;
+    -fx-text-inner-color: white;   
+} 
+.txtfieldDate{
+    -fx-prompt-text-fill: lightgray;
+    -fx-text-inner-color: lightgray;
+    
+}
+
+.btnbor {
+    -fx-border-color:  bor;
+    -fx-background-color:  backc;
+    -fx-border-radius: 20;
+}
+
+.btnbor:hover{
+    -fx-border-color:  bor;
+    -fx-background-color:  bor;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-text-fill:  WHITE;
+} 
+.btnreg{
+    -fx-border-color: reg;
+    -fx-background-color:  backc;
+    -fx-border-radius: 20;
+}
+
+.btnbor:hover{
+    -fx-border-color:  bor;
+    -fx-background-color:  bor;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-text-fill:  WHITE;
+} 
+.btnuser{
+    
+    -fx-background-color:  backc;
+
+}
+
+.btnuser:hover{
+    -fx-border-color:  bor;
+    -fx-background-color: bor;
+     -fx-text-fill:white;
+   
+} 
+
+.btnrep{
+    -fx-border-color: #6491B7;
+    -fx-background-color:  backc;
+    -fx-border-radius: 20;
+}
+
+.btnrep:hover{
+    -fx-border-color:  #6491B7;
+    -fx-background-color: #6491B7;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-text-fill:white;
+}
+
+.btnReceptionist{
+    -fx-background-color: backc ;
+    
+}
+.btnReceptionist:hover{
+    -fx-border-color:   #6491B7;
+    -fx-background-color:   #6491B7;
+    -fx-text-fill:white;
+} 
+.btnAdmin:hover{
+    -fx-border-color:   #098F80;
+    -fx-background-color:  #098F80;
+    -fx-text-fill:white;
+} 
+
+.btnAdmin{
+    -fx-background-color: backc ;
+}
+
+.btnDoctor:hover{
+    -fx-border-color:   #554CBC;
+    -fx-background-color:  #554CBC;
+    -fx-text-fill:white;
+} 
+
+.btnDoctor{
+    -fx-background-color: backc ;
+}
+
+
+    

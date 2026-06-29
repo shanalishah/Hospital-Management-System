@@ -1,0 +1,13 @@
+/build/
+/dist/
+/nbproject/private/src
+
+# Tooling
+.claude/
+
+# Python / Streamlit
+__pycache__/
+*.pyc
+*.db
+.venv/
+venv/

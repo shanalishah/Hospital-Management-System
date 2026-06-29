@@ -13,4 +13,6 @@ COPY app ./app
 
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Bind to the platform-provided $PORT in the cloud (Render/Heroku/etc.),
+# falling back to 8000 for local `docker run`.
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

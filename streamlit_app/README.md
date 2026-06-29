@@ -5,6 +5,8 @@ logic** — it authenticates against the [FastAPI backend](../backend) and perfo
 every read/write over HTTP, adapting the interface to the signed-in user's role
 (Admin, Receptionist, Doctor, Patient).
 
+**Live app:** https://hospital-mgmt-system.streamlit.app
+
 ```
  Streamlit UI  ──HTTP/JWT──▶  FastAPI backend  ──▶  PostgreSQL / SQLite
  (this folder)                (../backend)

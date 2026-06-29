@@ -5,6 +5,8 @@ A production-shaped REST API for hospital operations, built with **FastAPI**,
 access control**. This is a ground-up re-engineering of a JavaFX + MySQL desktop
 project into a layered, tested, containerized web service.
 
+**Live API:** https://hms-api-8raz.onrender.com/docs (interactive Swagger UI)
+
 ## 🏗️ Architecture
 
 ```

@@ -54,6 +54,9 @@ CSS = """
     }
     .pill { display:inline-block; background:#e6f6f4; color:#0f6e8c;
             padding:.18rem .7rem; border-radius:999px; font-size:.78rem; font-weight:600; }
+    /* Beat the global sidebar `* { color: ... !important }` rule so the role
+       pill keeps its dark teal text on the light pill background. */
+    section[data-testid="stSidebar"] .pill { color:#0f6e8c !important; }
     .stButton > button { background:#0f6e8c; color:#fff; border:none; border-radius:10px;
                          padding:.55rem 1rem; font-weight:600; }
     .stButton > button:hover { background:#14a098; color:#fff; }

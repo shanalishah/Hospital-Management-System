@@ -74,5 +74,17 @@ def test_patients_directory_is_staff_only(client, auth):
     assert client.get("/users/patients", headers=auth("john", "patient123")).status_code == 403
 
 
+def test_admin_can_delete_user_with_dependent_rows(client, auth):
+    # Maria (id 6) has seeded appointments + a prescription referencing her.
+    # Deleting her must clear dependents first (FK-safe), not error.
+    admin = auth("admin", "admin123")
+    before = client.get("/users", headers=admin).json()
+    maria = next(u for u in before if u["username"] == "maria")
+    resp = client.delete(f"/users/{maria['id']}", headers=admin)
+    assert resp.status_code == 204, resp.text
+    after = {u["id"] for u in client.get("/users", headers=admin).json()}
+    assert maria["id"] not in after
+
+
 def test_unauthenticated_is_rejected(client):
     assert client.get("/users/me").status_code == 401

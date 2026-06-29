@@ -70,8 +70,8 @@ class Appointment(Base):
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    patient_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
-    doctor_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    patient_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    doctor_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
     scheduled_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     reason: Mapped[str | None] = mapped_column(String(255))
     status: Mapped[AppointmentStatus] = mapped_column(
@@ -87,8 +87,8 @@ class Prescription(Base):
     __tablename__ = "prescriptions"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    patient_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
-    doctor_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    patient_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
+    doctor_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True)
     diagnosis: Mapped[str] = mapped_column(String(255), nullable=False)
     symptoms: Mapped[str | None] = mapped_column(Text)
     medication: Mapped[str | None] = mapped_column(Text)
@@ -106,7 +106,7 @@ class AuditLog(Base):
     __tablename__ = "audit_logs"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    actor_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"))
+    actor_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
     action: Mapped[str] = mapped_column(String(80), nullable=False)
     entity: Mapped[str] = mapped_column(String(80), nullable=False)
     entity_id: Mapped[int | None] = mapped_column(Integer)

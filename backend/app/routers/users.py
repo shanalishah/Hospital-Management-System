@@ -1,14 +1,14 @@
 """User endpoints. Admin-only management plus a self-service /me and a public
 doctor directory used by patients when booking."""
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.deps import get_current_user, require_role
 from app.models import Role, User
 from app.schemas import UserOut
-from app.services import write_audit
+from app.services import delete_user_cascade
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -52,11 +52,4 @@ def delete_user(
     db: Session = Depends(get_db),
     admin: User = Depends(require_role(Role.ADMIN)),
 ):
-    user = db.query(User).filter(User.id == user_id).first()
-    if not user:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, "User not found")
-    if user.id == admin.id:
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "You cannot delete your own account")
-    db.delete(user)
-    write_audit(db, admin.id, "delete", "user", user_id)
-    db.commit()
+    delete_user_cascade(db, admin, user_id)

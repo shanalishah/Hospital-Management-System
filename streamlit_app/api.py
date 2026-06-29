@@ -18,6 +18,9 @@ import streamlit as st
 
 DEFAULT_BASE = "http://localhost:8000"
 
+# Generous timeout so the first request can wake a sleeping free-tier backend.
+REQUEST_TIMEOUT = 60
+
 
 def _base_url() -> str:
     try:
@@ -47,7 +50,7 @@ class APIClient:
     def _request(self, method, path, **kwargs):
         url = f"{self.base}{path}"
         try:
-            resp = requests.request(method, url, headers=self._headers(), timeout=15, **kwargs)
+            resp = requests.request(method, url, headers=self._headers(), timeout=REQUEST_TIMEOUT, **kwargs)
         except requests.RequestException as exc:
             raise APIError(0, f"Cannot reach API at {self.base}. Is the backend running? ({exc})")
         if resp.status_code >= 400:

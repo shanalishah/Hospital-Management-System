@@ -128,7 +128,8 @@ def login_screen():
             if st.button("Sign in", width="stretch"):
                 c = APIClient()
                 try:
-                    data = c.login(username.strip(), password)
+                    with st.spinner("Signing in… (first request may take ~30s while the free server wakes up)"):
+                        data = c.login(username.strip(), password)
                     st.session_state.auth = {
                         "token": c.token, "name": data["name"], "role": data["role"],
                         "username": username.strip(),
